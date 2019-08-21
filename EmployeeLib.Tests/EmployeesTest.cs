@@ -11,6 +11,23 @@ namespace Employee.UnitTests
     {
 
         [TestMethod]
+        public void ValidateStringAndLoad()
+        {
+            //Passing Test
+            var stringBuilder = new StringBuilder()
+                .AppendLine("Employee1,,1000")
+                 .AppendLine("Employee2,Employee1,800")
+               .AppendLine("Employee4,Employee2,500")
+                //Uncomment the line below to fail the text
+                // .AppendLine("Employee4,Employee2,5KLI0")
+                .AppendLine("Employee6,Employee2,500")
+               .AppendLine("Employee3,Employee1,500")
+                .AppendLine("Employee5,Employee1,500");
+            var employeeData = new Employees(stringBuilder.ToString());
+            Assert.IsTrue(employeeData.validateStringAndLoad);
+        }
+
+        [TestMethod]
         public void TestForSalaryValidIntegers()
         {
             //Passing Test

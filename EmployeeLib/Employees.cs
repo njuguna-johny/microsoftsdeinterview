@@ -16,37 +16,47 @@ namespace EmployeeLib
         public bool ValidateOneCEO;
         public bool validateNonEmployeeManagers;
         public bool validateCircularReference;
+        public bool validateStringAndLoad;
         //Employee Constructor accepts string csc 
         public Employees(string csv)
         {
-            csvInput = csv;
             _employeeList = new List<Employee>();
-            //Load from CSV to List
-            LoadEmployees();
-            //Check for valid salaries
-            CheckIfSalariesAreValid = ValidateSalaries(_employeeList);
-            //Checl for employees with more than one manager
-            ValidateEmployeesWithMoreThanOneManager = ValidateEmployees(_employeeList);
-            //Validate CEO
-            ValidateOneCEO = ValidateCEO(_employeeList);
-            //Validate non employee managers
-            validateNonEmployeeManagers = ValidateNonEmployeeManagers(_employeeList);
-            //Check circular reference
-            validateCircularReference = ValidateCircularReference(_employeeList);
+            //Validate Load from CSV to List
+            validateStringAndLoad= ValidateLoadEmployees(csv);
+            if (validateStringAndLoad)
+            {
+                //Check for valid salaries
+                CheckIfSalariesAreValid = ValidateSalaries(_employeeList);
+                //Checl for employees with more than one manager
+                ValidateEmployeesWithMoreThanOneManager = ValidateEmployees(_employeeList);
+                //Validate CEO
+                ValidateOneCEO = ValidateCEO(_employeeList);
+                //Validate non employee managers
+                validateNonEmployeeManagers = ValidateNonEmployeeManagers(_employeeList);
+                //Check circular reference
+                validateCircularReference = ValidateCircularReference(_employeeList);
+            }
         }
-        
         //Sets employees list
-        private void LoadEmployees()
+        private bool ValidateLoadEmployees(string csv)
         {
-            CsvParserOptions csvParserOptions = new CsvParserOptions(false, ',');
-            CsvReaderOptions csvReaderOptions = new CsvReaderOptions(new[] { Environment.NewLine });
-            var csvMapper = new MappingHelper();
-            CsvParser<Employee> csvParser = new CsvParser<Employee>(csvParserOptions, csvMapper);
-            _employeeList = csvParser
-                .ReadFromString(csvReaderOptions, csvInput)
-                .Select(x => x.Result).ToList();
+            if (!string.IsNullOrEmpty(csv))
+            {
+                CsvParserOptions csvParserOptions = new CsvParserOptions(false, ',');
+                CsvReaderOptions csvReaderOptions = new CsvReaderOptions(new[] { Environment.NewLine });
+                var csvMapper = new MappingHelper();
+                CsvParser<Employee> csvParser = new CsvParser<Employee>(csvParserOptions, csvMapper);
+                _employeeList = csvParser
+                    .ReadFromString(csvReaderOptions, csv)
+                    .Select(x => x.Result).ToList();
+                return true;
+            }
+            else
+                return false;
+
 
         }
+   
         // Validate Salaries
         private bool ValidateSalaries(List<Employee> employeeList)
         {
