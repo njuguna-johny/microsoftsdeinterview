@@ -135,10 +135,8 @@ namespace EmployeeLib
             try
             {
                 var salaryBudget = 0;
-
-                var hgd = _employeeList.Where(f => f.ManagerId == managerId).ToList();
-                //Get employees reporting directly
-                salaryBudget += _employeeList.Where(e => e.ManagerId== managerId).Sum(s => s.Salary);
+                //Get manager and employees reporting directly to the manager
+                salaryBudget += _employeeList.Where(e => e.ManagerId== managerId || e.ManagerId=="").Sum(s => s.Salary);
                 //Get employees reporting indirectly
                 foreach (var item in _employeeList.Where(f => f.ManagerId == managerId).ToList())
                 {
